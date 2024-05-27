@@ -23,252 +23,248 @@ public class Coupling implements CKASTVisitor, ClassLevelMetric, MethodLevelMetr
 
 	@Override
 	public void visit(VariableDeclarationStatement node) {
-		if(this.className != null) {
-			coupleTo(node.getType());
-		}
+		if(this.className == null) return;
+
+		coupleTo(node.getType());
 	}
 
 	@Override
 	public void visit(ClassInstanceCreation node) {
 		if(this.className != null) {
 			coupleTo(node.getType());
-		} else if(this.methodName != null) {	
-			IMethodBinding binding = node.resolveConstructorBinding();
-			coupleTo(binding);
-		} 
+			return;
+		}
+
+		if(this.methodName == null) return;
+
+		IMethodBinding binding = node.resolveConstructorBinding();
+		coupleTo(binding);
 	}
 
 	@Override
 	public void visit(ArrayCreation node) {
-		if(this.className != null) {
-			coupleTo(node.getType());
-		}
+		if(this.className == null) return;
+
+		coupleTo(node.getType());
 	}
 
 	@Override
 	public void visit(FieldDeclaration node) {
-		if(this.className != null) {
-			coupleTo(node.getType());
-		}
+		if(this.className == null) return;
+
+		coupleTo(node.getType());
 	}
 
 	public void visit(ReturnStatement node) {
-		if(this.className != null){
-			if (node.getExpression() != null) {
-				coupleTo(node.getExpression().resolveTypeBinding());
-			}
-		}
+		if(this.className == null || node.getExpression() == null) return;
+		coupleTo(node.getExpression().resolveTypeBinding());
 	}
 
 	@Override
 	public void visit(TypeLiteral node) {
-		if(this.className != null) {
-			coupleTo(node.getType());
-		}
+		if(this.className == null) return;
+		
+		coupleTo(node.getType());
 	}
 	
 	public void visit(ThrowStatement node) {
-		if(this.className != null) {
-			if(node.getExpression()!=null)
-				coupleTo(node.getExpression().resolveTypeBinding());
-		}
+		if(this.className == null || node.getExpression()!=null) return;
+
+		coupleTo(node.getExpression().resolveTypeBinding());
 	}
 
 	public void visit(TypeDeclaration node) {
-		if(this.className != null) {
-			ITypeBinding resolvedType = node.resolveBinding();
-	
-			if(resolvedType!=null) {
-				ITypeBinding binding = resolvedType.getSuperclass();
-				if (binding != null)
-					coupleTo(binding);
-	
-				for (ITypeBinding interfaces : resolvedType.getInterfaces()) {
-					coupleTo(interfaces);
-				}
-			} else {
-				coupleTo(node.getSuperclassType());
-				List<Type> list = node.superInterfaceTypes();
-				list.forEach(x -> coupleTo(x));
-			}
+		if(this.className == null) {
+			coupleTo(node.getSuperclassType());
+			List<Type> list = node.superInterfaceTypes();
+			list.forEach(x -> coupleTo(x));
+
+			return;
 		}
 
+		ITypeBinding resolvedType = node.resolveBinding();
+	
+		if (resolvedType==null) return;
+
+		ITypeBinding binding = resolvedType.getSuperclass();
+		
+		if (binding != null) coupleTo(binding);
+
+		for (ITypeBinding interfaces : resolvedType.getInterfaces())
+			coupleTo(interfaces);
 	}
 
 	public void visit(MethodDeclaration node) {
-		if(this.className != null) {
-			IMethodBinding resolvedMethod = node.resolveBinding();
-			if (resolvedMethod != null) {
-	
-				coupleTo(resolvedMethod.getReturnType());
-	
-				for (ITypeBinding param : resolvedMethod.getParameterTypes()) {
-					coupleTo(param);
-				}
-			} else {
-				coupleTo(node.getReturnType2());
-				List<TypeParameter> list = node.typeParameters();
-				list.forEach(x -> coupleTo(x.getName()));
-			}
+		if(this.className == null) return;
+
+		IMethodBinding resolvedMethod = node.resolveBinding();
+		if (resolvedMethod == null) {
+			coupleTo(node.getReturnType2());
+			List<TypeParameter> list = node.typeParameters();
+			list.forEach(x -> coupleTo(x.getName()));
+
+			return;
 		}
 
+		coupleTo(resolvedMethod.getReturnType());
+
+		for (ITypeBinding param : resolvedMethod.getParameterTypes())
+			coupleTo(param);
 	}
 
 	@Override
 	public void visit(CastExpression node) {
-		if(this.className != null) {
-			coupleTo(node.getType());
-		}
-
+		if(this.className == null) return;
+		
+		coupleTo(node.getType());
 	}
 
 	@Override
 	public void visit(InstanceofExpression node) {
-		if(this.className != null) {
-			coupleTo(node.getRightOperand());
-			coupleTo(node.getLeftOperand().resolveTypeBinding());
-		}
-
+		if(this.className == null) return;
+		
+		coupleTo(node.getRightOperand());
+		coupleTo(node.getLeftOperand().resolveTypeBinding());
 	}
 
 	@Override
 	public void visit(MethodInvocation node) {
-		
 		IMethodBinding binding = node.resolveMethodBinding();
-		if(binding!=null) {
-			if(this.className != null) {
-				coupleTo(binding.getDeclaringClass());
-			} else if(this.methodName != null) {
-				coupleTo(binding);
-			}
-		}
+		if(binding==null) return;
 
+		if(this.className != null) {
+			coupleTo(binding.getDeclaringClass());
+			return;
+		} 
+		
+		if(this.methodName != null)
+			coupleTo(binding);
 	}
 
 	public void visit(NormalAnnotation node) {
-		if(this.className != null) {
-			coupleTo(node);
-		}
+		if(this.className == null) return;
+
+		coupleTo(node);
 	}
 
 	public void visit(MarkerAnnotation node) {
-		if(this.className != null) {
-			coupleTo(node);
-		}
+		if(this.className == null) return;
+
+		coupleTo(node);
 	}
 
 	public void visit(SingleMemberAnnotation node) {
-		if(this.className != null) {
-			coupleTo(node);
-		}
+		if(this.className == null) return;
+
+		coupleTo(node);
 	}
 
 	public void visit(ParameterizedType node) {
 		if(this.className != null) {
-			
-			try {	
-				ITypeBinding binding = node.resolveBinding();
-				if (binding != null) {
-		
-					coupleTo(binding);
-		
-					for (ITypeBinding types : binding.getTypeArguments()) {
-						coupleTo(types);
-					}
-				} else {
-					coupleTo(node.getType());
-				}
-			} catch (NullPointerException e) {
-				// TODO: handle exception
-			}
+			return;
 		}
+			
+		try {	
+			ITypeBinding binding = node.resolveBinding();
+			if (binding == null) {
+				coupleTo(node.getType());
+				return;
+			}
+	
+			coupleTo(binding);
 
+			for (ITypeBinding types : binding.getTypeArguments()) {
+				coupleTo(types);
+			}
+		} catch (NullPointerException e) {
+			// TODO: handle exception
+		}
 	}
 	private void coupleTo(Annotation type) {
-		if(this.className != null) {
-			ITypeBinding resolvedType = type.resolveTypeBinding();
-			if(resolvedType!=null)
-				coupleTo(resolvedType);
-			else {
-				addToSet(type.getTypeName().getFullyQualifiedName());
-			}
+		if(this.className == null) return;
+
+		ITypeBinding resolvedType = type.resolveTypeBinding();
+		if(resolvedType!=null){
+			coupleTo(resolvedType);
+			return;
 		}
+
+		addToSet(type.getTypeName().getFullyQualifiedName());
 	}
 
 	private void coupleTo(Type type) {
-		if(type==null)
-			return;
+		if(type==null || this.className == null) return;
 
-		if(this.className != null) {
-			ITypeBinding resolvedBinding = type.resolveBinding();
-			if(resolvedBinding!=null)
-				coupleTo(resolvedBinding);
-			else {
-				if(type instanceof SimpleType) {
-					SimpleType castedType = (SimpleType) type;
-					addToSet(castedType.getName().getFullyQualifiedName());
-				}
-				else if(type instanceof QualifiedType) {
-					QualifiedType castedType = (QualifiedType) type;
-					addToSet(castedType.getName().getFullyQualifiedName());
-				}
-				else if(type instanceof NameQualifiedType) {
-					NameQualifiedType castedType = (NameQualifiedType) type;
-					addToSet(castedType.getName().getFullyQualifiedName());
-				}
-				else if(type instanceof ParameterizedType) {
-					ParameterizedType castedType = (ParameterizedType) type;
-					coupleTo(castedType.getType());
-				}
-				else if(type instanceof WildcardType) {
-					WildcardType castedType = (WildcardType) type;
-					coupleTo(castedType.getBound());
-				}
-				else if(type instanceof ArrayType) {
-					ArrayType castedType = (ArrayType) type;
-					coupleTo(castedType.getElementType());
-				}
-				else if(type instanceof IntersectionType) {
-					IntersectionType castedType = (IntersectionType) type;
-					List<Type> types = castedType.types();
-					types.stream().forEach(x -> coupleTo(x));
-				}
-				else if(type instanceof UnionType) {
-					UnionType castedType = (UnionType) type;
-					List<Type> types = castedType.types();
-					types.stream().forEach(x -> coupleTo(x));
-				}
-			}
+		ITypeBinding resolvedBinding = type.resolveBinding();
+		if(resolvedBinding!=null){
+			coupleTo(resolvedBinding);
+			return;
 		}
+		if(type instanceof SimpleType) {
+			SimpleType castedType = (SimpleType) type;
+			addToSet(castedType.getName().getFullyQualifiedName());
+			return;
+		}
+		if(type instanceof QualifiedType) {
+			QualifiedType castedType = (QualifiedType) type;
+			addToSet(castedType.getName().getFullyQualifiedName());
+			return;
+		}
+		if(type instanceof NameQualifiedType) {
+			NameQualifiedType castedType = (NameQualifiedType) type;
+			addToSet(castedType.getName().getFullyQualifiedName());
+			return;
+		}
+		if(type instanceof ParameterizedType) {
+			ParameterizedType castedType = (ParameterizedType) type;
+			coupleTo(castedType.getType());
+			return;
+		}
+		if(type instanceof WildcardType) {
+			WildcardType castedType = (WildcardType) type;
+			coupleTo(castedType.getBound());
+			return;
+		}
+		if(type instanceof ArrayType) {
+			ArrayType castedType = (ArrayType) type;
+			coupleTo(castedType.getElementType());
+			return;
+		}
+		if(type instanceof IntersectionType) {
+			IntersectionType castedType = (IntersectionType) type;
+			List<Type> types = castedType.types();
+			types.stream().forEach(x -> coupleTo(x));
+			return;
+		}
+		if(type instanceof UnionType) {
+			UnionType castedType = (UnionType) type;
+			List<Type> types = castedType.types();
+			types.stream().forEach(x -> coupleTo(x));
+			return;
+		}
+		
 	}
 
 	private void coupleTo(SimpleName name) {
-		if(this.className != null) {
-			addToSet(name.getFullyQualifiedName());
-		}
+		if(this.className == null) return;
+
+		addToSet(name.getFullyQualifiedName());
 	}
 
 	private void coupleTo(ITypeBinding binding) {
 
-		if(this.className != null) {
-			if (binding == null)
-				return;
-			if (binding.isWildcardType())
-				return;
-			if (binding.isNullType())
-				return;
-	
-			String type = binding.getQualifiedName();
-			if (type.equals("null"))
-				return;
-	
-			if (isFromJava(type) || binding.isPrimitive())
-				return;
-	
-	
-			String cleanedType = cleanClassName(type);
-			addToSet(cleanedType);
-		}
+		if(this.className == null) return;
+
+		if (binding == null) return;
+		if (binding.isWildcardType() || binding.isNullType()) return;
+
+		String type = binding.getQualifiedName();
+		if (type.equals("null")) return;
+
+		if (isFromJava(type) || binding.isPrimitive()) return;
+
+		String cleanedType = cleanClassName(type);
+		addToSet(cleanedType);
 	}
 	
 	private void coupleTo(IMethodBinding binding) {
@@ -307,21 +303,18 @@ public class Coupling implements CKASTVisitor, ClassLevelMetric, MethodLevelMetr
 		if(className != null){
 			this.extras.addToSetClassIn(name, this.className);
 			this.extras.addToSetClassOut(this.className, name);
-		} else {
-			this.extras.addToSetMethodIn(name, this.methodName);
-			this.extras.addToSetMethodOut(this.methodName, name);
+			return;
 		}
+		
+		this.extras.addToSetMethodIn(name, this.methodName);
+		this.extras.addToSetMethodOut(this.methodName, name);
 	}
 
 	@Override
-	public void setResult(CKClassResult result) {
-		
-	}
+	public void setResult(CKClassResult result) { }
 
 	@Override
-	public void setResult(CKMethodResult result) {
-		
-	}
+	public void setResult(CKMethodResult result) { }
 	
 	@Override
 	public void setClassName(String className) {
