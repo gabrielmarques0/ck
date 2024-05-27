@@ -1,3 +1,7 @@
+package com.github.mauricioaniche.ck.metric;
+
+import org.eclipse.jdt.core.dom.*;
+
 public interface CKASTDeclarationVisitor {
     default void visit(AnnotationTypeDeclaration node) {}
     default void visit(AnnotationTypeMemberDeclaration node) {}
@@ -10,6 +14,7 @@ public interface CKASTDeclarationVisitor {
     default void visit(PackageDeclaration node) {}
     default void visit(TypeDeclaration node) {}
     default void visit(TypeDeclarationStatement node) {}
+    default void visit(ASTNode node) {}
 
     default void endVisit(AnnotationTypeDeclaration node) {}
     default void endVisit(AnnotationTypeMemberDeclaration node) {}
@@ -22,4 +27,5 @@ public interface CKASTDeclarationVisitor {
     default void endVisit(PackageDeclaration node) {}
     default void endVisit(TypeDeclaration node) {}
     default void endVisit(TypeDeclarationStatement node) {}
+    default void endVisit(ASTNode node) {}
 }

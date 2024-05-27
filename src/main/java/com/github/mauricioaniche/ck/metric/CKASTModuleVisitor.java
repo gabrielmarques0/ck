@@ -1,3 +1,7 @@
+package com.github.mauricioaniche.ck.metric;
+
+import org.eclipse.jdt.core.dom.*;
+
 public interface CKASTModuleVisitor {
     default void visit(ExportsDirective node) {}
     default void visit(OpensDirective node) {}

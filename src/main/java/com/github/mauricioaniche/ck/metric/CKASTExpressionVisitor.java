@@ -1,3 +1,7 @@
+package com.github.mauricioaniche.ck.metric;
+
+import org.eclipse.jdt.core.dom.*;
+
 public interface CKASTExpressionVisitor {
     default void visit(ArrayAccess node) {}
     default void visit(ArrayCreation node) {}

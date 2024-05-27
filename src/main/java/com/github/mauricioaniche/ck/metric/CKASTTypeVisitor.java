@@ -1,3 +1,7 @@
+package com.github.mauricioaniche.ck.metric;
+
+import org.eclipse.jdt.core.dom.*;
+
 public interface CKASTTypeVisitor {
     default void visit(ArrayType node) {}
     default void visit(IntersectionType node) {}
