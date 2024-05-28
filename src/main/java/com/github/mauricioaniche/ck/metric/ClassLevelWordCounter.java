@@ -12,6 +12,7 @@ public class ClassLevelWordCounter implements CKASTVisitor, ClassLevelMetric {
 
 	private String classSourceCode;
 
+	@Override
 	public void visit(TypeDeclaration node) {
 
 		String typeSourceCode = node.toString();
@@ -19,11 +20,13 @@ public class ClassLevelWordCounter implements CKASTVisitor, ClassLevelMetric {
 
 	}
 
+	@Override
 	public void visit(AnonymousClassDeclaration node) {
 		setOrRemoveSourceCode(node.toString());
 
 	}
 
+	@Override
 	public void visit(EnumDeclaration node) {
 		setOrRemoveSourceCode(node.toString());
 

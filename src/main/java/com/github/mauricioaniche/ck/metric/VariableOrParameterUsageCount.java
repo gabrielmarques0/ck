@@ -24,17 +24,20 @@ public class VariableOrParameterUsageCount implements CKASTVisitor, MethodLevelM
 		result.setVariablesUsage(occurrences);
 	}
 
+	@Override
 	public void visit(VariableDeclarationFragment node) {
 		declaredVariables.add(node.getName().toString());
 
 	}
 
+	@Override
 	public void visit(SingleVariableDeclaration node) {
 		declaredVariables.add(node.getName().toString());
 	}
 
+	@Override
 	public void visit(SimpleName node) {
-		if(declaredVariables.contains(node.toString())) {
+		if (declaredVariables.contains(node.toString())) {
 			String var = node.getIdentifier();
 			if (!occurrences.containsKey(var))
 				occurrences.put(var, -1);

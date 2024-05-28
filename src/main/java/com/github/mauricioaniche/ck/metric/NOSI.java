@@ -9,11 +9,12 @@ public class NOSI implements CKASTVisitor, ClassLevelMetric {
 
 	private int count = 0;
 
+	@Override
 	public void visit(MethodInvocation node) {
 
 		IMethodBinding binding = node.resolveMethodBinding();
-		if(binding!=null && Modifier.isStatic(binding.getModifiers()))
-				count++;
+		if (binding != null && Modifier.isStatic(binding.getModifiers()))
+			count++;
 	}
 
 	@Override

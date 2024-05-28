@@ -8,6 +8,7 @@ public class NumberOfParenthesis implements CKASTVisitor, ClassLevelMetric, Meth
 
 	private int qty = 0;
 
+	@Override
 	public void visit(ParenthesizedExpression node) {
 		qty++;
 	}

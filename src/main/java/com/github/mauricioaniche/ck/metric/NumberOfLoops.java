@@ -8,18 +8,22 @@ public class NumberOfLoops implements CKASTVisitor, ClassLevelMetric, MethodLeve
 
 	private int qty = 0;
 
+	@Override
 	public void visit(EnhancedForStatement node) {
 		qty++;
 	}
 
+	@Override
 	public void visit(DoStatement node) {
 		qty++;
 	}
 
+	@Override
 	public void visit(WhileStatement node) {
 		qty++;
 	}
 
+	@Override
 	public void visit(ForStatement node) {
 		qty++;
 	}
