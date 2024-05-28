@@ -8,6 +8,7 @@ public class NumberOfStringLiterals implements CKASTVisitor, ClassLevelMetric, M
 
 	private int qty = 0;
 
+	@Override
 	public void visit(StringLiteral node) {
 		qty++;
 	}

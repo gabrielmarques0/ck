@@ -13,6 +13,7 @@ public class NumberOfReturns implements CKASTVisitor, ClassLevelMetric, MethodLe
 
 	}
 
+	@Override
 	public void visit(ReturnStatement node) {
 		qty++;
 	}

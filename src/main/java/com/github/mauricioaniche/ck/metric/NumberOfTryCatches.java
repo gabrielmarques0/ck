@@ -8,6 +8,7 @@ public class NumberOfTryCatches implements CKASTVisitor, ClassLevelMetric, Metho
 
 	private int qty = 0;
 
+	@Override
 	public void visit(TryStatement node) {
 		qty++;
 	}

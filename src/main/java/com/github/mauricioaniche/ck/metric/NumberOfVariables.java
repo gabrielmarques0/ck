@@ -12,6 +12,7 @@ public class NumberOfVariables implements CKASTVisitor, ClassLevelMetric, Method
 		result.setVariablesQty(qty);
 	}
 
+	@Override
 	public void visit(VariableDeclarationFragment node) {
 		qty++;
 	}

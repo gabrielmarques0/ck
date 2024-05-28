@@ -4,7 +4,8 @@ import com.github.mauricioaniche.ck.CKClassResult;
 import com.github.mauricioaniche.ck.CKMethodResult;
 import org.eclipse.jdt.core.dom.*;
 
-public class NumberOfInnerClassesLambdasAndAnonymousClasses implements CKASTVisitor, ClassLevelMetric, MethodLevelMetric {
+public class NumberOfInnerClassesLambdasAndAnonymousClasses
+		implements CKASTVisitor, ClassLevelMetric, MethodLevelMetric {
 
 	private int anonymousClassesQty = 0;
 	private int innerClassesQty = 0;
@@ -12,42 +13,46 @@ public class NumberOfInnerClassesLambdasAndAnonymousClasses implements CKASTVisi
 
 	private String firstFound = null;
 
+	@Override
 	public void visit(TypeDeclaration node) {
 
-		if(firstFound == null)
+		if (firstFound == null)
 			firstFound = "type";
 
 		innerClassesQty++;
 	}
 
+	@Override
 	public void visit(EnumDeclaration node) {
 		// we count enum as class declaration!
 		innerClassesQty++;
 
-		if(firstFound == null)
+		if (firstFound == null)
 			firstFound = "enum";
 	}
 
+	@Override
 	public void visit(LambdaExpression node) {
 		lambdasQty++;
 
-		if(firstFound == null)
+		if (firstFound == null)
 			firstFound = "lambda";
 	}
 
+	@Override
 	public void visit(AnonymousClassDeclaration node) {
 		anonymousClassesQty++;
 
-		if(firstFound == null)
+		if (firstFound == null)
 			firstFound = "anonymous";
 	}
 
 	@Override
 	public void setResult(CKClassResult result) {
 		// the -1 there is because the main type under analysis here is counted as +1.
-		result.setAnonymousClassesQty(anonymousClassesQty - (firstFound.equals("anonymous")?1:0));
-		result.setInnerClassesQty(innerClassesQty - (firstFound.equals("type") || firstFound.equals("enum")?1:0));
-		result.setLambdasQty(lambdasQty - (firstFound.equals("lambda")?1:0));
+		result.setAnonymousClassesQty(anonymousClassesQty - (firstFound.equals("anonymous") ? 1 : 0));
+		result.setInnerClassesQty(innerClassesQty - (firstFound.equals("type") || firstFound.equals("enum") ? 1 : 0));
+		result.setLambdasQty(lambdasQty - (firstFound.equals("lambda") ? 1 : 0));
 	}
 
 	@Override

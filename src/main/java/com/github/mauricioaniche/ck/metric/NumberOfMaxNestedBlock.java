@@ -22,7 +22,7 @@ public class NumberOfMaxNestedBlock implements CKASTVisitor, ClassLevelMetric, M
 		// note that blocks might not always exist, and that's why we check
 		// for their existence at every node later on...
 		// if they do not exist, we +1 in the node.
-		if(currentNode.empty() || !(currentNode.peek() instanceof SwitchCase)) {
+		if (currentNode.empty() || !(currentNode.peek() instanceof SwitchCase)) {
 			plusOne();
 			blocks.push(true);
 		} else {
@@ -37,7 +37,7 @@ public class NumberOfMaxNestedBlock implements CKASTVisitor, ClassLevelMetric, M
 		currentNode.push(node);
 
 		boolean containsBlock = containsBlock(node.getBody());
-		if(!containsBlock) {
+		if (!containsBlock) {
 			plusOne();
 			nodes.push(true);
 		} else {
@@ -52,7 +52,7 @@ public class NumberOfMaxNestedBlock implements CKASTVisitor, ClassLevelMetric, M
 		currentNode.push(node);
 
 		boolean containsBlock = containsBlock(node.getBody());
-		if(!containsBlock) {
+		if (!containsBlock) {
 			plusOne();
 			nodes.push(true);
 		} else {
@@ -66,7 +66,7 @@ public class NumberOfMaxNestedBlock implements CKASTVisitor, ClassLevelMetric, M
 		currentNode.push(node);
 
 		boolean containsBlock = containsBlock(node.getBody());
-		if(!containsBlock) {
+		if (!containsBlock) {
 			plusOne();
 			nodes.push(true);
 		} else {
@@ -80,7 +80,7 @@ public class NumberOfMaxNestedBlock implements CKASTVisitor, ClassLevelMetric, M
 		currentNode.push(node);
 
 		boolean containsBlock = containsBlock(node.getBody());
-		if(!containsBlock) {
+		if (!containsBlock) {
 			plusOne();
 			nodes.push(true);
 		} else {
@@ -101,14 +101,13 @@ public class NumberOfMaxNestedBlock implements CKASTVisitor, ClassLevelMetric, M
 		currentNode.push(node);
 	}
 
-
 	@Override
 	public void visit(CatchClause node) {
 
 		currentNode.push(node);
 
 		boolean containsBlock = containsBlock(node.getBody());
-		if(!containsBlock) {
+		if (!containsBlock) {
 			plusOne();
 			nodes.push(true);
 		} else {
@@ -117,12 +116,13 @@ public class NumberOfMaxNestedBlock implements CKASTVisitor, ClassLevelMetric, M
 
 	}
 
+	@Override
 	public void visit(IfStatement node) {
 
 		currentNode.push(node);
 
 		boolean containsBlock = containsBlock(node.getThenStatement());
-		if(!containsBlock) {
+		if (!containsBlock) {
 			plusOne();
 			nodes.push(true);
 		} else {
@@ -130,11 +130,10 @@ public class NumberOfMaxNestedBlock implements CKASTVisitor, ClassLevelMetric, M
 		}
 	}
 
-
 	@Override
 	public void endVisit(Block node) {
 		Boolean pop = blocks.pop();
-		if(pop)
+		if (pop)
 			current--;
 
 		currentNode.pop();
@@ -149,7 +148,6 @@ public class NumberOfMaxNestedBlock implements CKASTVisitor, ClassLevelMetric, M
 		return (body instanceof Block);
 	}
 
-
 	private void plusOne() {
 		current++;
 		max = Math.max(current, max);
@@ -157,7 +155,7 @@ public class NumberOfMaxNestedBlock implements CKASTVisitor, ClassLevelMetric, M
 
 	private void popBlock() {
 		Boolean pop = nodes.pop();
-		if(pop)
+		if (pop)
 			current--;
 	}
 

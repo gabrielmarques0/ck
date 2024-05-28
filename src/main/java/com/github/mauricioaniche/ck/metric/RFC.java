@@ -9,11 +9,13 @@ import java.util.HashSet;
 public class RFC implements CKASTVisitor, ClassLevelMetric, MethodLevelMetric {
 	private HashSet<String> methodInvocations = new HashSet<String>();
 
+	@Override
 	public void visit(MethodInvocation node) {
 		String methodName = JDTUtils.getQualifiedMethodFullName(node);
 		methodInvocations.add(methodName);
 	}
 
+	@Override
 	public void visit(SuperMethodInvocation node) {
 		String methodName = JDTUtils.getQualifiedMethodFullName(node);
 		methodInvocations.add(methodName);
